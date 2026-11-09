@@ -42,7 +42,7 @@ export function QuoteWizard() {
     window.dataLayer = window.dataLayer || []
     window.dataLayer.push({
       event: 'pageview',
-      step: stepId,
+      pageName: stepId,
     })
   }, [stepId])
 
