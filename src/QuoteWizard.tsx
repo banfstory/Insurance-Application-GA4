@@ -54,7 +54,6 @@ export function QuoteWizard() {
           suburb: form.usage.suburb,
           state: form.usage.state,
           overnightParkingType: form.usage.parkingType,
-          kilometersPerYear: form.usage.annualKm,
         })
         break
       case 'quote-summary':
