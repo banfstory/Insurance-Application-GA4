@@ -8,6 +8,7 @@ import { StepDriver } from './steps/quote/StepDriver'
 import { StepQuoteSummary } from './steps/quote/StepQuoteSummary'
 import { StepUsage } from './steps/quote/StepUsage'
 import { StepVehicle } from './steps/quote/StepVehicle'
+import pageView from './analytics/pageview'
 
 const STEP_COMPONENTS = {
   vehicle: StepVehicle,
@@ -34,16 +35,9 @@ export function QuoteWizard() {
     }
 
     previousStepRef.current = stepId;
-
     // Store stepId into window.__pageId
     (window as any).__pageId = stepId
-
-    // Push step-view analytics to your data layer
-    window.dataLayer = window.dataLayer || []
-    window.dataLayer.push({
-      event: 'pageview',
-      pageName: stepId,
-    })
+    pageView(null);
   }, [stepId])
 
   // Safely check if stepId is valid and exists in our map

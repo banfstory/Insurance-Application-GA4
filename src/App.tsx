@@ -7,7 +7,7 @@ function App() {
   useEffect(() => {
     // Initialize global listeners on mount and get the cleanup function back
     const cleanup = initGlobalTracking();
-
+    window.dataLayer = window.dataLayer || [];
     // Clean up listeners when the App unmounts
     return cleanup;
   }, []);
