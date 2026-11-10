@@ -42,7 +42,7 @@ export function QuoteWizard() {
     let pageData: Record<string, unknown> | null = null
     switch (stepId) {
       case 'vehicle':
-        pageData = { quoteStarted: 1 }
+        pageData = { quoteStarted: true }
         break
       case 'usage':
         updateGlobalJourneyState({
@@ -64,10 +64,10 @@ export function QuoteWizard() {
             .map(([benefit]) => benefit)
             .join('|'),
         })
-        pageData = { quoteCompleted: 1 }
+        pageData = { quoteCompleted: true }
         break
       case 'policy-start':
-        pageData = { policyPurchaseStarted: 1 }
+        pageData = { policyPurchaseStarted: true }
         break
       case 'payment':
         updateGlobalJourneyState({
@@ -78,7 +78,7 @@ export function QuoteWizard() {
         updateGlobalJourneyState({ policyNumber })
         pageData = {
           annualPremium: quote.annualTotal,
-          policyPurchaseCompleted: 1,
+          policyPurchaseCompleted: true,
         }
         break
     }
