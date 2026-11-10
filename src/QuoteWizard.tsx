@@ -64,7 +64,7 @@ export function QuoteWizard() {
             .map(([benefit]) => benefit)
             .join('|'),
         })
-        pageData = { annualPremium: quote.annualTotal, quoteCompleted: true }
+        pageData = { quoteCompleted: true }
         break
       case 'policy-start':
         pageData = { policyPurchaseStarted: true }
@@ -76,7 +76,10 @@ export function QuoteWizard() {
         break
       case 'confirmation':
         updateGlobalJourneyState({ policyNumber })
-        pageData = { policyPurchaseCompleted: true }
+        pageData = {
+          annualPremium: quote.annualTotal,
+          policyPurchaseCompleted: true,
+        }
         break
     }
 
