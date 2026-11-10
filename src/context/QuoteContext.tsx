@@ -13,6 +13,7 @@ import {
 } from '../types/quote'
 import type { QuoteBreakdown } from '../types/quote'
 import { calculateQuote } from '../utils/pricing'
+import { resetGlobalJourneyState } from '../analytics/pageview'
 
 const QUOTE_STEPS: WizardStepId[] = [
   'vehicle',
@@ -105,6 +106,7 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const resetWizard = useCallback(() => {
+    resetGlobalJourneyState()
     setForm(initialQuoteFormState())
     setStepIndex(0)
     setPolicyNumber(null)

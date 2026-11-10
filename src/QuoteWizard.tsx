@@ -8,7 +8,7 @@ import { StepDriver } from './steps/quote/StepDriver'
 import { StepQuoteSummary } from './steps/quote/StepQuoteSummary'
 import { StepUsage } from './steps/quote/StepUsage'
 import { StepVehicle } from './steps/quote/StepVehicle'
-import pageView from './analytics/pageview'
+import pageView, { updateGlobalJourneyState } from './analytics/pageview'
 
 const STEP_COMPONENTS = {
   vehicle: StepVehicle,
@@ -24,6 +24,7 @@ const STEP_COMPONENTS = {
 export function QuoteWizard() {
   const context = useQuoteWizard()
   const stepId = context?.stepId
+  const { form, quote, policyNumber } = context
   const previousStepRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -37,8 +38,51 @@ export function QuoteWizard() {
     previousStepRef.current = stepId;
     // Store stepId into window.__pageId
     (window as any).__pageId = stepId
-    pageView(null);
-  }, [stepId])
+
+    let pageData: Record<string, unknown> | null = null
+    switch (stepId) {
+      case 'vehicle':
+        pageData = { quoteStarted: true }
+        break
+      case 'usage':
+        updateGlobalJourneyState({
+          vehicleIdentificationMethod: form.vehicle.identificationMode,
+        })
+        break
+      case 'driver':
+        updateGlobalJourneyState({
+          suburb: form.usage.suburb,
+          state: form.usage.state,
+          overnightParkingType: form.usage.parkingType,
+          kilometersPerYear: form.usage.annualKm,
+        })
+        break
+      case 'quote-summary':
+        updateGlobalJourneyState({
+          coverType: form.cover.coverType,
+          optionalBenefits: Object.entries(form.cover.addOns)
+            .filter(([, selected]) => selected)
+            .map(([benefit]) => benefit)
+            .join('|'),
+        })
+        pageData = { annualPremium: quote.annualTotal, quoteCompleted: true }
+        break
+      case 'policy-start':
+        pageData = { policyPurchaseStarted: true }
+        break
+      case 'payment':
+        updateGlobalJourneyState({
+          policyStartDate: form.buy.policyStartDate,
+        })
+        break
+      case 'confirmation':
+        updateGlobalJourneyState({ policyNumber })
+        pageData = { policyPurchaseCompleted: true }
+        break
+    }
+
+    pageView(pageData)
+  }, [form, policyNumber, quote.annualTotal, stepId])
 
   // Safely check if stepId is valid and exists in our map
   const Step = stepId ? STEP_COMPONENTS[stepId as keyof typeof STEP_COMPONENTS] : undefined
