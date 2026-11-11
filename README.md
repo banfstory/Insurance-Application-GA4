@@ -23,7 +23,7 @@ Follow these instructions to get a local copy of the project up and running on y
 ### Prerequisites
 
 Make sure you have Node.js and npm installed on your system.
-* Node.js (v16+ recommended)
+* Node.js (v18+ or LTS recommended)
 * npm
 
 ### Installation & Setup
